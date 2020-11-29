@@ -1,0 +1,73 @@
+---
+title: "Assingment Week 2. Leaflet Map"
+author: "Beatriz Jiménez Franco"
+date: "29/11/2020"
+output: html_document
+---
+
+## November 28, 2020
+
+## Synopsis
+
+I maKe an interactive leaflet map, of the magnitude and depth of quakes, center at Madrid, Spain.
+Source: < https://www.ign.es/web/ign/portal/sis-catalogo-terremotos>
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load the data
+```{r}
+getwd()
+setwd("C:/Users/pruebas/Documents/Leaflet_map")
+quakes <- read.csv2("catalogoComunSV_1606610811979.csv")
+head(quakes)
+```
+
+## Cleaning data
+
+```{r}
+library(leaflet)
+library(leaflet.providers)
+
+## I am gonna change the column names
+
+names(quakes) <- c("Event", "Date", "Time", "Latitude", "Length", "Depth", " Int.Max", "Magnitude", "Mag.type", "Location")
+
+quakes$Lat <- as.numeric(quakes$Latitude)
+quakes$Len <- as.numeric(quakes$Length)
+quakes$Mag <- as.numeric(quakes$Magnitude)
+
+quakes <- quakes %>% na.omit()
+
+perimeter <- quakes[chull(quakes$Len, quakes$Lat), ]
+popup <- paste ("<n>", quakes$Location,"</n><br>",
+               " Mag: ", quakes$Mag.type,"<br>",
+               "Depth: " , quakes$Depth, "<br>",
+"<b><a href='https://www.ign.es/web/ign/portal/sis-catalogo-terremotos'>Catalogue of quarkes of IGN </a></b>"
+                      )
+```
+
+## I use leaflet package in R to make the interactive map.
+
+```{r}
+map <- quakes %>% leaflet() %>%
+  setView(lng = -3.658592, lat = 40.416948, zoom = 4) %>%
+  setMaxBounds(lng1 = -19.482422, lat1 = 25.191689, lng2 = 20.156250, lat2 = 45.480676) %>%
+  # Base groups
+  addTiles(group = "OpenStreetMap") %>%
+  addProviderTiles(providers$Esri.WorldTerrain, group = "Esri") %>%
+  addProviderTiles(providers$Stamen.TonerLite, group = "Toner Lite")%>%   addMarkers(lng = quakes$Len, lat = quakes$Lat, popup = popup, clusterOptions = markerClusterOptions() ) %>%
+  # Overlay groups
+  addPolygons(data =perimeter, lng = ~Len, lat = ~Lat, fill = F, weight = 4.5, color = "magenta", group = "Sismic zone") %>%
+  addCircles(~Len, ~Lat,~10 ^ Mag/5, stroke = F, color = "yellow", group = "Magnitude", fillOpacity = 0.6, weight = 30) %>%
+  addCircles(~Len, ~Lat, ~30*Depth, stroke = F, color = "red", group = "Depth", weight = 30) %>%
+  # Layers control
+  addLayersControl(
+    baseGroups = c("OpenStreetMap", "Esri", "Toner Lite"),
+    overlayGroups = c("Sismic zone", "Magnitud", "Depth"),
+    options = layersControlOptions(collapsed = FALSE)
+  )
+
+map
+```
