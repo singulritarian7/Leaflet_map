@@ -1,6 +1,6 @@
 ---
 title: "Mymap"
-author: "Beatriz Jiménez Fanco"
+author: "Beatriz JimÃ©nez Fanco"
 date: "29/11/2020"
 output: html_document
 ---
@@ -60,22 +60,7 @@ map
 ```
 
 
-gkhdhdgkdd
 
-
-```{r}
-
-```
-
-jrstsrrstsrsss
-
-
-```{r}
-
-```
-
-tjv,jv,jh,
-jfjhdjdtd
 
 
 
