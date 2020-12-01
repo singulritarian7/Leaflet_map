@@ -1,0 +1,151 @@
+---
+title: "Leaflet5"
+author: "Beatriz Jiménez Franco"
+date: "1/12/2020"
+output: html_document
+---
+
+## Creación de visores de mapas web de Leaflet en R
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Leaflet Map
+
+## Source: MapGis
+
+The source of this job is:
+
+<https://mappinggis.com/2019/04/creacion-de-visores-de-mapas-web-de-leaflet-en-r/>
+
+El esqueleto básico del script en R para leaflet se compone de:
+
+- Creación del mapa mediante leaflet(), es el equivalente a una instancia de la clase map de la librería JavaScript de Leaflet.
+- Añadir capas.
+- Imprimir el mapa.
+
+Estos tres pasos se traducen en el siguiente código que contiene lo mínimo imprescindible para crear un mapa que dibuja un marcador:
+
+```{r}
+library(leaflet)
+m <- leaflet() %>%
+  addTiles() %>%  # Añade por defecto los Tiles de  OpenStreetMap
+  addMarkers(lng=-5.664112384, lat=40.96500844, popup="Plaza Mayor de Salamanca")
+m  # Imprime el mapa
+```
+
+En la primera línea indicamos que utilice la librería leaflet, después hemos creado un objeto m, al que le hemos asignado mediante el operador < la librería Leaflet. Con addTiles() estamos incorporando un mapa de Tiles siendo OpenStreetMap el que utiliza por defecto. A continuación añadimos un marcador al mapa con addMarkers(), pasando como parámetros las coordenadas geográficas (lng y lat) y creamos un popup con el texto «Plaza Mayor de Salamanca». Por último solo nos queda mostrar el mapa por pantalla, por lo que escribimos m.
+
+## Exportar el mapa como página web
+
+RStudio nos permite exportar el mapa que hemos creado. En el menú de visualización del mapa, RStudio dispone de la opción «Export». La primera vez que la utilicemos nos indicará que necesita descargar nuevos paquetes. Seleccionamos «Save as Web Page» y nos crea un archivo html con todo lo necesario para ver el mapa.
+
+Utilizando esta opción hemos obtenido una página web que mostramos a continuación en donde se puede ver el mapa creado con R y que contiene un marcador con su correspondiente popup:
+
+Buscar el documento de referncia de este trabajo: 
+
+<https://mappinggis.com/2019/04/creacion-de-visores-de-mapas-web-de-leaflet-en-r/>
+
+## Métodos y opciones de Leaflet en R
+
+Leaflet dispone de varios métodos y opciones para controlar el estado del mapa y configurarlo. Los métodos como setView se aplican de la forma que se indica a continuación:
+
+```{r}
+library(leaflet)
+m <- leaflet() %>% setView(lng = -5.6641, lat = 40.9650, zoom = 12)
+m %>% addTiles()
+```
+
+Detrás del operador %>% hemos llamado al método setView y le hemos indicado las coordenadas del centro del mapa (lng y lat) y el nivel de zoom. Si ahora queremos añadir alguna de las opciones de Leaflet las escribiremos de la siguiente forma:
+
+```{r}
+m <- leaflet(options = leafletOptions(minZoom = 0, maxZoom = 14))
+```
+
+Para ilustrar la aplicación de los métodos y opciones de leaflet vamos a escribir un código en el que como opciones definimos el nivel máximo y mínimo del zoom y como métodos utilizaremos setView y setMaxBounds.
+En el método setMaxBounds indicamos las coordenadas geográficas de las esquinas de nuestro mapa que queremos que sean los límites. Se componen del par de coordenadas (lng1, lat1) y (lng2, lat2). Exportando el mapa como indicamos en el apartado anterior obtendremos el código para crear el siguiente mapa.
+
+```{r}
+# Ejemplo opciones y métodos
+library(leaflet)
+m <- leaflet(options = leafletOptions(minZoom = 0, maxZoom = 14)) %>% setView(lng = -5.6641, lat = 40.9650, zoom = 12)%>%
+setMaxBounds(lng1 = -5.780, lat1 = 40.890,lng2 = -5.580, lat2 = 41.020)
+m %>% addTiles()
+```
+
+## Trabajando con las capas de Leaflet en R
+
+Vamos a poder utilizar en R los mismos tipos de capas que empleamos en Leaflet tales como:
+
+- Capas de Tiles y servicios WMS.
+- Imágenes Raster.
+- Capas vectoriales, como geoJSON o TopoJSON.
+
+## Utilizando capas de teselas (Tiles)
+
+Podemos utilizar servicios de teselas de terceros. Ya hemos visto anteriormente el ejemplo de OpenStreetMap, que es el que R utiliza por defecto, pero también tenemos otros disponibles.
+Las capas de tiles se utilizan mediante addProvidersTiles. En el ejemplo anterior estamos utilizando Stamen:
+
+```{r}
+# Ejemplo mapas base
+library(leaflet)
+m <- leaflet() %>% setView(lng = -5.6641, lat = 40.9650, zoom = 14)
+m %>% addProviderTiles(providers$Stamen.Toner)
+```
+
+## Trabajando con los datos
+
+Tanto Leaflet() como las funciones de capa de mapa tienen un parámetro de data opcional que está diseñado para recibir datos espaciales de varias formas:
+
+- Desde la base R:
+-   matriz lng / lat
+-   marco de datos con columnas lng / lat
+- Del paquete sp :
+-   SpatialPoints[DataFrame]
+-   Line / Lines
+-   SpatialLines[DataFrame]
+-   Polygon / Polygons
+-   SpatialPolygons[DataFrame]
+- Del paquete de map :
+-   El marco de datos devuelto desde map().
+
+Como resumen de lo anterior, podemos decir que R es muy flexible en la forma de recibir los datos para componer el mapa. Puede hacerlo de la forma tradicional, con el par de coordenadas lat/log o puede recibirlos en forma de datos para luego obtener las coordenadas como se indica en el siguiente ejemplo. Vamos a continuación a crear un mapa de monumentos de la ciudad de Salamanca (España) en la que situamos cada punto por sus coordenadas y creamos un popup que contiene su nombre:
+
+```{r}
+# Ejemplo Salamanca
+salamanca <- data.frame(
+    lat = c(40.96500844,40.96440736,40.96381613,40.96395408,40.96423656,40.9638227,40.96279789,40.96311321,40.9617862,40.96142488,40.95849481,40.95944086,40.96063653,40.96047886,40.96158254,40.96301467,40.96279132,40.96016352,40.9605577,40.96114896,40.96193729,40.96515625,40.96477523,40.96526792,40.96553725,40.96604307,40.96670818,40.96681986,40.96534182,40.96966415),
+    lng = c(-5.664112384,-5.664499515,-5.665769654,-5.665743555,-5.666100238,-5.666117637,-5.66646562,-5.666413423,-5.667953249,-5.667170286,-5.669658367,-5.666848402,-5.665978444,-5.666657011,-5.665552164,-5.664342923,-5.663316372,-5.660201922,-5.662811796,-5.663333771,-5.66045421,-5.666735307,-5.666822303,-5.668057644,-5.669832358,-5.667205085,-5.664788776,-5.664980167,-5.659203645,-5.663814423))
+ 
+salamanca_popup = popup = c("Plaza Mayor","Iglesia de San Martín","Palacio de Maldonado de Morille","Casa de los Solis","Convento de la Madre de Dios","Iglesia de San benito","La Clerecía","Universidad Pontificia","Palacio de los Abarca Maldonado - Museo Provincial de Bellas Artes","Universidad","Puente Romano","Casa Lis","Catedral Nueva","Catedral Vieja","Palacio de Anaya","Palacio de Fonseca (La Salina)","Torre del Clavero","Iglesia de Santo Tomas Cantuariense","Convento de San Esteban","Convento de las Dueñas","Convento de Santa Clara","Palacio de Monterrey","Convento de las Agustinas","Convento de los Capuchinos","Colegio Mayor Arzobispo Fonseca","Convento de las Ursulas","Iglesia del Carmen","Casa de Doña Maria La Brava","Iglesia de Sancti Spiritus","Iglesia de San Marcos")
+ 
+salamanca %>% 
+    leaflet() %>%
+    addTiles() %>%
+    addMarkers(popup = salamanca_popup, clusterOptions = markerClusterOptions())
+```
+
+En el ejemplo anterior al objeto salamanca le pasamos unos datos en donde por un lado están todas las coordenadas de latitud y por otro las coordenadas de la longitud geográfica. Además creamos salamanca_popup que contiene el nombre del monumento. Al utilizar addMarkers() interpreta lat y lng como los elementos con las coordenadas del punto. Estamos también creando un cluster de los puntos con clusterOptions = markerClusterOptions(), de esta forma mejoramos la visibilidad de los marcadores.
+
+## Plugins de Leaflet
+
+Una de las principales características y donde radica parte de la potencia de Leaflet, es el gran número de plugins de que dispone. Podemos utilizar esos plugins en R, como por ejemplo Minimapa. Este plugin crea un control que abre un mapa con  una vista general del mapa a otra escala y sirve para situarnos. El plugin Minimapa de Leaflet lo podemos aplicar de la siguiente forma.
+
+
+```{r}
+ leaflet() %>%
+    addTiles() %>%
+    addMarkers(popup = salamanca_popup, clusterOptions = markerClusterOptions())%>%
+	  addProviderTiles(providers$Esri.WorldStreetMap) %>%
+	  addMiniMap(
+		tiles = providers$Esri.WorldStreetMap,
+		toggleDisplay = TRUE)
+```
+
+Utilizando como base el ejemplo del apartado anterior hemos creado un minimapa en donde utilizamos como proveedor de teselas Esri y le damos la opción de desplegar/ocultar el minimapa con toggleDisplay.
+
+
+
+
+
