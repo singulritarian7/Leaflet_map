@@ -1,0 +1,33 @@
+---
+title: "Leaflet3"
+author: "Beatriz Jiménez Franco"
+date: "1/12/2020"
+output: html_document
+---
+
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Leaflet Map
+
+```{r}
+library(leaflet)
+
+data <- data.frame(lat = runif(30, min = 9.943278, max = 9.99999),
+                 lng = runif(30, min = -84.111242, max = -83.211242),
+                 col = sample(c("black", "blue", "red"), 30, replace = TRUE),
+                 stringsAsFactors = FALSE)
+
+data %>%
+  leaflet() %>%
+  addTiles() %>%
+  addCircleMarkers(color = data$col) %>%
+  addLegend(labels = LETTERS[1:3], colors = c("black", "blue", "red"))
+
+```
+
+
+
+
