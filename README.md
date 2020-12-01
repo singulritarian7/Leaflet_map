@@ -16,7 +16,8 @@ Host your webpage on either GitHub Pages, RPubs, or NeoCities.
 Your webpage must contain the date that you created the document, and it must contain a map created with Leaflet. We would love to see you show off your creativity!
 
 -if(!require(leaflet)) install.packages(“leaflet”)
-Note:
+
+## Note:
 I also added another alternatives files for this assingment:
 You can see another file publised in RPubs that is simpler yhan the index file, here:
 <https://rpubs.com/spoke/698357>
