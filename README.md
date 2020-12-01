@@ -9,7 +9,7 @@ Also you can see the htlm file in gh-pages here;
 
 ## Instructions
 
-Create a web page using R Markdown that features a map created with Leaflet. The R markdown document for the assingment is called index.
+Create a web page using R Markdown that features a map created with Leaflet. The R markdown document for the assingment is called index.htlm.
 
 Host your webpage on either GitHub Pages, RPubs, or NeoCities.
 
@@ -18,6 +18,6 @@ Your webpage must contain the date that you created the document, and it must co
 -if(!require(leaflet)) install.packages(“leaflet”)
 
 ## Note:
-I also added another alternatives files for this assingment:
-You can see another file publised in RPubs that is simpler yhan the index file, here:
+I also added another alternatives files for this assingment that i search in different sources:
+You can see another file publised in RPubs that is simpler than the index file, here:
 <https://rpubs.com/spoke/698357>
