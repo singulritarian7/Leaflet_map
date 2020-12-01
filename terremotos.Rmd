@@ -1,0 +1,93 @@
+---
+title: "Mymap"
+author: "Beatriz Jiménez Fanco"
+date: "29/11/2020"
+output: html_document
+---
+
+## November, 28, 2020
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+```{r}
+quakes <- read.csv2("catalogoComunSV_1606610811979.csv")
+head(quakes)
+```
+
+
+
+```{r}
+library(leaflet)
+library(leaflet.providers)
+
+## I am gonna change the column names
+
+names(quakes) <- c("Event", "Date", "Time", "Latitude", "Length", "Depth", " Int.Max", "Magnitude", "Mag.type", "Location")
+
+quakes$Latitude <- as.numeric(quakes$Latitude)
+quakes$Length <- as.numeric(quakes$Length)
+
+quakes <- quakes %>% na.omit()
+
+perimeter <- quakes[chull(quakes$Length, quakes$Latitude), ]
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+map <- quakes %>% leaflet() %>%
+  setView(lng = -3.658592, lat = 40.416948, zoom = 4) %>%
+  setMaxBounds(lng1 = -8.396, lat1 = 36.08186, lng2 = 2.82493, lat2 = 43.37135) %>%
+  # Base groups
+  addTiles(group = "OpenStreetMap") %>%
+  addProviderTiles(providers$Stamen.Toner, group = "Toner") %>%
+  addProviderTiles(providers$Stamen.TonerLite, group = "Toner Lite") %>%
+  # Overlay groups
+  addPolygons(data =perimeter, lng = ~Length, lat = ~Latitude, fill = F, weight = 4.5, color = "red", group = "Sismic zone") %>%
+  addCircles(~Length, ~Latitude, ~10 ^ as.numeric(Magnitude)/500, stroke = F, color = "green", group = "Magnitude", fillOpacity = 0.6) %>%
+  addCircles(~Length, ~Latitude, ~30*Depth, stroke = F, color = "blue", group = "Depth") %>%
+  # Layers control
+  addLayersControl(
+    baseGroups = c("OpenStreetMap", "Toner", "Toner Lite"),
+    overlayGroups = c("Sismic zone", "Magnitud", "Depth"),
+    options = layersControlOptions(collapsed = FALSE)
+  )
+
+map
+```
+
+
+gkhdhdgkdd
+
+
+```{r}
+
+```
+
+jrstsrrstsrsss
+
+
+```{r}
+
+```
+
+tjv,jv,jh,
+jfjhdjdtd
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
