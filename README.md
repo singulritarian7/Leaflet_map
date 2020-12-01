@@ -4,7 +4,7 @@
 Data source here:
 <https://www.ign.es/web/ign/portal/sis-catalogo-terremotos>
 You can see the map published in RPubs here: <https://rpubs.com/spoke/697493>
-Also can see the htkn file in gh-pages here;
+Also can see the htlm file in gh-pages here;
 <https://singulritarian7.github.io/Leaflet_map/index.html>
 
 ## Instructions
