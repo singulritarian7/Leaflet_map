@@ -1,0 +1,43 @@
+---
+title: "Map6.Rmd"
+author: "Beatriz Jiménez Franco"
+date: "3/12/2020"
+output: html_document
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 4-top favourite places in Tallinn
+
+```{r}
+library(leaflet)
+lats<-c(59.44493, 59.4402,59.43842, 59.43632)
+longs<-c(24.80621,24.7948,24.79102, 24.79583)
+places<- c('Lauluväljak', 'Kadrioru park', 'Kadrioru loss',
+           'Kumu Kunstimuuseum')
+sites <- c("https://lauluvaljak.ee/en", "http://kadriorupark.ee/en",
+           "https://kadriorumuuseum.ekm.ee/en/",
+           "https://kumu.ekm.ee/en/")
+        
+types<- c('Square', 'Park', 'Museum','Museum')
+typecolour<- c("blue","green","brown","brown")
+```
+
+## Map
+
+```{r}
+map<- data.frame(lat=lats, lng=longs) %>% leaflet() %>%
+        addTiles() %>%
+        addCircleMarkers(color=typecolour,
+                         popup = paste("<a href='", sites, "'>",
+                                       places,"</a>" ,sep = "")) %>%
+        addLegend(labels = types[1:3],
+                  colors=c("blue","green","brown")) %>%
+        addProviderTiles(providers$OpenStreetMap)
+map
+```
+
+
+
